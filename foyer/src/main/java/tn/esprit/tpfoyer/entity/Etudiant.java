@@ -18,6 +18,7 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Etudiant {
 
+    //Entity Jalel
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long idEtudiant;
