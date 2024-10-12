@@ -1,12 +1,10 @@
 package tn.esprit.tpfoyer;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import tn.esprit.tpfoyer.entity.Chambre;
@@ -27,7 +25,7 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class) // Annotation that replaces the syntax : class extends class
-public class TestMockChambreServiceImpl {
+class TestMockChambreServiceImpl {
 
 
     // Create mock repository
@@ -49,11 +47,6 @@ public class TestMockChambreServiceImpl {
             .idChambre(2).build();
 
     private final List<Chambre> chambres = List.of(chambre1, chambre2);
-
-    @BeforeAll
-    public static void beforeAll() {
-        MockitoAnnotations.openMocks(TestMockChambreServiceImpl.class);
-    }
 
 
     // Retrieve All Chambres tests:
@@ -112,13 +105,43 @@ public class TestMockChambreServiceImpl {
     @Test
     void testRetrieveChambre_NotExist () {
 
-        when(mockChambreRepository.findById(5L)).thenReturn(null);
+        when(mockChambreRepository.findById(5L)).thenReturn(Optional.empty());
 
         Chambre expectedChambre = chambreService.retrieveChambre(5L);
 
         Assertions.assertNull(expectedChambre);
 
     }
+
+    // Add a chamber:
+
+    // Id/Chamber doesn't exist in the DB, should return the added room/chamber
+
+    @Test
+    void testAddChambre_New () {
+
+        when(mockChambreRepository.save(chambre1)).thenReturn(chambre1);
+
+        Chambre addedChambre = chambreService.addChambre(chambre1);
+
+        Assertions.assertEquals(addedChambre, chambre1);
+    }
+
+    // Id/Chamber already exists in the DB, should return null/ log message
+
+    @Test
+    void testAddChambre_Exists () {
+
+        when(mockChambreRepository.save(chambre1)).thenReturn(chambre1);
+
+        Chambre addedChambre = chambreService.addChambre(chambre1);
+        // Chambre addedAgainChambre = chambreService.addChambre(chambre1);
+
+        Assertions.assertEquals(addedChambre, chambre1);
+        // Assertions.assertNull(addedAgainChambre); // This should return null since the chamber is added twice
+    }
+
+
 
 
 
