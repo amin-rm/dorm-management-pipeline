@@ -16,7 +16,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 
 /**
@@ -132,20 +132,83 @@ class TestMockChambreServiceImpl {
     @Test
     void testAddChambre_Exists () {
 
-        when(mockChambreRepository.save(chambre1)).thenReturn(chambre1);
 
+        when(mockChambreRepository.existsById(1L)).thenReturn(false);
+        when(mockChambreRepository.save(chambre1)).thenReturn(chambre1);
         Chambre addedChambre = chambreService.addChambre(chambre1);
-        // Chambre addedAgainChambre = chambreService.addChambre(chambre1);
 
         Assertions.assertEquals(addedChambre, chambre1);
-        // Assertions.assertNull(addedAgainChambre); // This should return null since the chamber is added twice
+
+        when(mockChambreRepository.existsById(1L)).thenReturn(true);
+        Chambre duplicateChambre = chambreService.addChambre(chambre1); // this should return null since the same chamber is added twice
+
+        Assertions.assertNull(duplicateChambre);
+
+
     }
 
 
+    // Modify a chamber
+
+    @Test
+    void testModifyChambre () {
+
+
+        Chambre chambreToAdd = chambre2.toBuilder().build(); // create a copy of chamber2
+
+
+        // Arrange: repo behavior
+        when(mockChambreRepository.save(chambre2)).thenReturn(chambre2);
+        when(mockChambreRepository.save(chambreToAdd)).thenReturn(chambreToAdd);
+
+        // Add chamber
+        Chambre addedChambre = chambreService.addChambre(chambreToAdd);
 
 
 
+        // Modify chamber type attribute
+        chambre2.setTypeC(TypeChambre.SIMPLE);
 
+
+        // Act: Modify existing chamber
+        Chambre modifiedChambre = chambreService.modifyChambre(chambre2);
+
+
+        // Assert
+        Assertions.assertEquals(modifiedChambre.getTypeC(), chambre2.getTypeC());
+        Assertions.assertEquals(addedChambre.getIdChambre(), modifiedChambre.getIdChambre());
+        Assertions.assertNotEquals(addedChambre, modifiedChambre);
+        Assertions.assertNotEquals(addedChambre.getTypeC(), modifiedChambre.getTypeC());
+
+
+    }
+
+    // Modify a chamber
+
+
+    // if the passed id is null, the method should never be called
+    @Test
+    void testRemoveChambre_NullId() {
+        Long chambreId = null;
+
+        // call the method to remove the chambre
+        chambreService.removeChambre(chambreId);
+
+        // verify that deleteById was not called
+        verify(mockChambreRepository, never()).deleteById(anyLong());
+    }
+
+    // if the passed id is not null (could exist or not exist)
+    @Test
+    void testRemoveChambre_NotNullId () {
+        Long chambreId = 1L;
+
+        // call the method
+        chambreService.removeChambre(chambreId);
+
+        // verify that deleteById is called once
+        verify(mockChambreRepository, times(1)).deleteById(anyLong());
+    }
 
 
 
