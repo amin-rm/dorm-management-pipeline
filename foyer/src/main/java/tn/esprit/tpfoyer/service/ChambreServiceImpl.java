@@ -18,7 +18,7 @@ public class ChambreServiceImpl implements IChambreService {
     ChambreRepository chambreRepository;
 
     public List<Chambre> retrieveAllChambres() {
-        log.info("In Methodo retrieveAllChambres : ");
+        log.info("In Methode retrieveAllChambres : ");
         List<Chambre> listC = chambreRepository.findAll();
         log.info("Out of retrieveAllChambres : ");
 
@@ -30,7 +30,7 @@ public class ChambreServiceImpl implements IChambreService {
     }
 
     public Chambre addChambre(Chambre c) {
-        return chambreRepository.save(c);
+        return chambreRepository.existsById(c.getIdChambre()) ? null : chambreRepository.save(c);
     }
 
     public Chambre modifyChambre(Chambre c) {
