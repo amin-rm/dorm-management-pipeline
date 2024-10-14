@@ -7,6 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import tn.esprit.tpfoyer.entity.Chambre;
 import tn.esprit.tpfoyer.entity.TypeChambre;
 import tn.esprit.tpfoyer.repository.ChambreRepository;
@@ -20,10 +21,17 @@ import static org.mockito.Mockito.*;
 
 
 /**
- * Test class for ChambreServiceImpl with Junit and Mockito
+ * Test class for {@link ChambreServiceImpl} using JUnit and Mockito.
+ * <p>
+ * Mockito is used to simulate the behavior of the JPA repository methods.
+ * </p>
+ * <p>
+ * Note: This test is a mock test and does not require a database connection.
+ * </p>
  */
 
 @SpringBootTest
+@ActiveProfiles("test") // To use the test profile "application-test.properties"
 @ExtendWith(MockitoExtension.class) // Annotation that replaces the syntax : class extends class
 class TestMockChambreServiceImpl {
 
@@ -50,8 +58,6 @@ class TestMockChambreServiceImpl {
 
 
     // Retrieve All Chambres tests:
-
-
     // if the list of chambers is not empty :
     @Test
     void testretrieveAllChambres_NonEmptyList() {
@@ -153,9 +159,7 @@ class TestMockChambreServiceImpl {
     @Test
     void testModifyChambre () {
 
-
         Chambre chambreToAdd = chambre2.toBuilder().build(); // create a copy of chamber2
-
 
         // Arrange: repo behavior
         when(mockChambreRepository.save(chambre2)).thenReturn(chambre2);
@@ -164,22 +168,17 @@ class TestMockChambreServiceImpl {
         // Add chamber
         Chambre addedChambre = chambreService.addChambre(chambreToAdd);
 
-
-
         // Modify chamber type attribute
         chambre2.setTypeC(TypeChambre.SIMPLE);
 
-
         // Act: Modify existing chamber
         Chambre modifiedChambre = chambreService.modifyChambre(chambre2);
-
 
         // Assert
         Assertions.assertEquals(modifiedChambre.getTypeC(), chambre2.getTypeC());
         Assertions.assertEquals(addedChambre.getIdChambre(), modifiedChambre.getIdChambre());
         Assertions.assertNotEquals(addedChambre, modifiedChambre);
         Assertions.assertNotEquals(addedChambre.getTypeC(), modifiedChambre.getTypeC());
-
 
     }
 
