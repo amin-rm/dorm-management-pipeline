@@ -8,7 +8,9 @@ import tn.esprit.tpfoyer.entity.Chambre;
 import tn.esprit.tpfoyer.entity.TypeChambre;
 import tn.esprit.tpfoyer.repository.ChambreRepository;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @AllArgsConstructor
@@ -44,34 +46,26 @@ public class ChambreServiceImpl implements IChambreService {
 
 
 
-
-
-
-
     public List<Chambre> recupererChambresSelonTyp(TypeChambre tc)
     {
         return chambreRepository.findAllByTypeC(tc);
     }
 
 
+    public Map<String, Integer> chambreStatistics() {
 
+        Integer nbSimple = chambreRepository.findAllByTypeC(TypeChambre.SIMPLE).size();
+        Integer nbDouble = chambreRepository.findAllByTypeC(TypeChambre.DOUBLE).size();
 
+        Map<String, Integer> stats = new HashMap<>();
+        stats.put("SIMPLE", nbSimple);
+        stats.put("DOUBLE", nbDouble);
+        stats.put("TOTAL", nbSimple + nbDouble);
+        stats.put("SIMPLE %", nbSimple * 100 / (nbDouble + nbSimple));
+        stats.put("DOUBLE %", nbDouble * 100 / (nbDouble + nbSimple));
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        return stats;
+    }
 
 
     public Chambre trouverchambreSelonEtudiant(long cin) {

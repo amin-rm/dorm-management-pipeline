@@ -4,6 +4,7 @@ import tn.esprit.tpfoyer.entity.Chambre;
 import tn.esprit.tpfoyer.entity.TypeChambre;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IChambreService {
 
@@ -17,5 +18,7 @@ public interface IChambreService {
     public Chambre trouverchambreSelonEtudiant(long Cin);
 
     public List<Chambre> recupererChambresSelonTyp(TypeChambre tc);
+
+    Map<String, Integer> chambreStatistics();
 
 }
