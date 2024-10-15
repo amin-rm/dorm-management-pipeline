@@ -20,6 +20,9 @@ resources:
 
 env:
   SPRING_PROFILES_ACTIVE: k8s
+  DATABASE_URL: mysql-service
+  DATABASE_USER: root
+  DATABASE_PASS:
 
 mysql:
   pvc:
