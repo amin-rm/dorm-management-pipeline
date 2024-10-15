@@ -26,22 +26,6 @@ import java.util.List;
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   // Récupérer les Blocs qui ont une capacité supérieure à 50 :
 
    List<Bloc> findAllByCapaciteBlocGreaterThan(long c);
@@ -62,7 +46,7 @@ import java.util.List;
 
 
    // Récupérer les Blocs qui ont une capacité inférieurs à 50 :
-   // List<Bloc> findAllByCapaciteBlocLessThan(long c);
+   List<Bloc> findAllByCapaciteBlocLessThan(long c);
 
 
     // Récupérer tous les Blocs qui ont un nom qui commence par "Bl" :
@@ -103,9 +87,6 @@ import java.util.List;
     // List des blocs non affectés à aucun foyer :
     List<Bloc> findAllByFoyerIsNull();
 
-
-    //Bloc findByC
-    //findAllByFoyerIsNull();
 
 
 
