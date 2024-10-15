@@ -22,6 +22,11 @@ env:
   SPRING_PROFILES_ACTIVE: k8s
 
 mysql:
+  pvc:
+    name: mysql-pvc
+    size: 1Gi
+    storageClass: ""
+    pvName: mysql-pv
   auth:
     rootPassword: ""
     database: your_db
