@@ -2,16 +2,18 @@ pipeline {
     agent any
 
     environment {
-        // credentials
+        // Jenkins credentials
         SONARQUBE_CREDS = credentials('sonarqube-credentials')  // SonarQube username & password
         DOCKER_CREDS = credentials('docker-credentials')  // DockerHub credentials
+        // vars
+        GIT_BRANCH = 'master'
     }
 
     stages {
         stage('Clone Repository') {
             steps {
                 echo 'Pulling changes...'
-                git url: 'https://github.com/amin-rm/dorm-management-pipeline', branch: 'master'
+                git url: 'https://github.com/amin-rm/dorm-management-pipeline', branch: $GIT_BRANCH
             }
         }
 
