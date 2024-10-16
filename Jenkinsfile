@@ -7,6 +7,7 @@ pipeline {
         DOCKER_CREDS = credentials('docker-credentials')  // DockerHub credentials
         // vars
         GIT_BRANCH = 'master'
+        SLACK_CHANNEL = '#cicd-pipeline'
     }
 
     stages {
@@ -93,15 +94,18 @@ pipeline {
                             // send zip file to Slack
                             dir('foyer/target/site/jacoco') {
                                 slackUploadFile(
-                                channel: '#cicd-pipeline',
+                                channel: $SLACK_CHANNEL,
                                 filePath: "jacoco-report.zip",
                                 initialComment: "Build Status: ${buildStatus}. Please find the JaCoCo code report attached."
                                 )
                             }
 
+
                         }
                     }
-                }
+        }
 
     }
+
+
 }
