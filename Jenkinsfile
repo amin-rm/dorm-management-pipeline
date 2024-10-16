@@ -77,5 +77,31 @@ pipeline {
                 }
             }
         }
+
+        stage('Notify Slack team') {
+                    steps {
+                        script {
+                            echo 'Creating JaCoCo report zip...'
+                            dir('foyer/target/site/jacoco') {
+                                // Create a zip file of the JaCoCo report
+                                sh 'zip -r jacoco-report.zip *'
+                            }
+
+                            // Define the build status and path to the zip file
+                            def buildStatus = currentBuild.currentResult ?: 'SUCCESS'
+
+                            // send zip file to Slack
+                            dir('foyer/target/site/jacoco') {
+                                slackUploadFile(
+                                channel: '#cicd-pipeline',
+                                filePath: "jacoco-report.zip",
+                                initialComment: "Build Status: ${buildStatus}. Please find the JaCoCo code report attached."
+                                )
+                            }
+
+                        }
+                    }
+                }
+
     }
 }
