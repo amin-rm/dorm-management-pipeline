@@ -35,7 +35,7 @@ docker pull sonarqube
 ```
 
 ### Slack Integration
-To integrate Slack with Jenkins for real-time notifications, refer to this guide:
+To integrate Slack with Jenkins for real-time notifications, refer to this guide: [Slack Plugin for Jenkins](https://plugins.jenkins.io/slack/)
 
 
 ### Jenkinsfile Configuration
@@ -48,7 +48,7 @@ You can customize the Jenkinsfile to suit your specific project needs, such as a
 
 ### 1. Deploying on Kubernetes (with Helm)
 
-- Ensure Helm is installed on your system (refer to the Helm documentation).
+- Ensure Helm is installed on your system (refer to [Installing Helm](https://helm.sh/docs/intro/install/)).
 - Use the Helm chart located in helm-charts/dorm-backend-app. This chart includes MySQL as a dependency, preconfigured with a persistent volume and claim.
 - Modify environment variables like resource limits, replicas, and database settings to fit your requirements.
 - Important: For security, use Kubernetes secrets to handle sensitive data like passwords. To create a secret, run:
