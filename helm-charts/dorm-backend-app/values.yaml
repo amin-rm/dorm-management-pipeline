@@ -12,17 +12,17 @@ service:
 
 resources:
   limits:
-    cpu: 100m
-    memory: 128Mi
+    cpu: 500m
+    memory: 512Mi
   requests:
-    cpu: 50m
-    memory: 64Mi
+    cpu: 250m
+    memory: 256Mi
 
 env:
   SPRING_PROFILES_ACTIVE: k8s
-  DATABASE_URL: mysql-service
+  DATABASE_URL: backend-mysql
   DATABASE_USER: root
-  DATABASE_PASS:
+  DATABASE_PASS: aaaa
 
 mysql:
   pvc:
@@ -31,7 +31,8 @@ mysql:
     storageClass: ""
     pvName: mysql-pv
   auth:
-    rootPassword: ""
+    rootPassword: "aaaa"
+    password: "aaaa"
     database: your_db
   primary:
     persistence:

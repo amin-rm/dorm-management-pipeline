@@ -8,6 +8,6 @@ spec:
     storage: 3Gi
   accessModes:
     - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Retain
+  persistentVolumeReclaimPolicy: Recycle
   hostPath:
-    path: /mnt/hdfs/datanode-0
+    path: /mnt/mysql

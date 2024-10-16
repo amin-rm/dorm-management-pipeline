@@ -20,7 +20,7 @@ spec:
           command: [ 'sh', '-c' ]
           args:
             - >
-              until nc -z mysql-service 3306;
+              until nc -z backend-mysql 3306;
               do
                 echo waiting for MySQL...;
                 sleep 2;
