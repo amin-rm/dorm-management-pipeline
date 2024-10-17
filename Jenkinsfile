@@ -7,13 +7,14 @@ pipeline {
         DOCKER_CREDS = credentials('docker-credentials')  // DockerHub credentials
         // vars
         GIT_BRANCH = 'master'
+        SLACK_CHANNEL = '#cicd-pipeline'
     }
 
     stages {
         stage('Clone Repository') {
             steps {
                 echo 'Pulling changes...'
-                git url: 'https://github.com/amin-rm/dorm-management-pipeline', branch: $GIT_BRANCH
+                git url: 'https://github.com/amin-rm/dorm-management-pipeline', branch: env.GIT_BRANCH
             }
         }
 
@@ -39,7 +40,7 @@ pipeline {
             steps {
                 echo 'Running SonarQube Analysis...'
                 dir('foyer') {
-                    sh "mvn sonar:sonar -Dsonar.login=$SONARQUBE_CREDS_USR -Dsonar.password=$SONARQUBE_CREDS_PSW"
+                    sh "mvn sonar:sonar -Dsonar.login=${env.SONARQUBE_CREDS_USR} -Dsonar.password=${env.SONARQUBE_CREDS_PSW}"
                 }
             }
         }
@@ -47,14 +48,10 @@ pipeline {
         stage('Deploy to nexus') {
             steps {
                echo 'Deploying to nexus...'
-
                dir('foyer') {
                 sh 'mvn deploy -DskipTests'
-
                }
-
             }
-
         }
 
         stage('Build Docker Image') {
@@ -70,10 +67,37 @@ pipeline {
             steps {
                 echo 'Tagging and pushing Docker image to DockerHub...'
                 script {
-                    sh 'docker tag foyer-app:latest ${DOCKER_CREDS_USR}/dorm-management:latest'
-                    // Login using the Personal Access Token
-                    sh 'echo $DOCKER_CREDS_PSW | docker login -u $DOCKER_CREDS_USR --password-stdin'
-                    sh 'docker push ${DOCKER_CREDS_USR}/dorm-management:latest'
+                    sh '''
+                        DOCKER_USER=${DOCKER_CREDS_USR}
+                        DOCKER_PASS=${DOCKER_CREDS_PSW}
+                        docker tag foyer-app:latest ${DOCKER_USER}/dorm-management:latest
+                        echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+                        docker push ${DOCKER_USER}/dorm-management:latest
+                    '''
+                }
+            }
+        }
+
+        stage('Notify Slack team') {
+            steps {
+                script {
+                    echo 'Creating JaCoCo report zip...'
+                    dir('foyer/target/site/jacoco') {
+                        // Create a zip file of the JaCoCo report
+                        sh 'zip -r jacoco-report.zip *'
+                    }
+
+                    // Define the build status and path to the zip file
+                    def buildStatus = currentBuild.currentResult ?: 'SUCCESS'
+
+                    // send zip file to Slack
+                    dir('foyer/target/site/jacoco') {
+                        slackUploadFile(
+                            channel: env.SLACK_CHANNEL,
+                            filePath: "jacoco-report.zip",
+                            initialComment: "Build Status: ${buildStatus}. Please find the JaCoCo code report attached."
+                        )
+                    }
                 }
             }
         }
