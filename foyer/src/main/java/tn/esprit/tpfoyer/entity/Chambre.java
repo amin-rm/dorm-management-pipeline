@@ -14,6 +14,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@Builder(toBuilder = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Chambre {
 
@@ -29,6 +30,7 @@ public class Chambre {
 
 
     @OneToMany
+    @ToString.Exclude
     Set<Reservation> reservations;
 
     @ManyToOne(cascade = CascadeType.ALL)

@@ -1,0 +1,40 @@
+replicaCount: 2  # For the dorm backend application
+
+image:
+  repository: amineromdhani/dorm-management # this is an example public image
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: NodePort
+  port: 8089
+  nodePort: 30007  # Custom node port for backend
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 250m
+    memory: 256Mi
+
+env:
+  SPRING_PROFILES_ACTIVE: k8s
+  DATABASE_URL: backend-mysql
+  DATABASE_USER: root
+  DATABASE_PASS: aaaa
+
+mysql:
+  pvc:
+    name: mysql-pvc
+    size: 1Gi
+    storageClass: ""
+    pvName: mysql-pv
+  auth:
+    rootPassword: "aaaa"
+    password: "aaaa"
+    database: your_db
+  primary:
+    persistence:
+      enabled: true
+      existingClaim: mysql-pvc

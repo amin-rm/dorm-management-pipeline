@@ -19,7 +19,7 @@ public class EtudiantServiceImpl implements IEtudiantService {
         return etudiantRepository.findAll();
     }
     public Etudiant retrieveEtudiant(Long etudiantId) {
-        return etudiantRepository.findById(etudiantId).get();
+        return etudiantRepository.findById(etudiantId).orElse(null);
     }
     public Etudiant addEtudiant(Etudiant c) {
         return etudiantRepository.save(c);

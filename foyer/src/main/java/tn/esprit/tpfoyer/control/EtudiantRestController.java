@@ -18,16 +18,8 @@ public class EtudiantRestController {
 
     @GetMapping("/retrieve-all-etudiants")
     public List<Etudiant> getEtudiants() {
-        List<Etudiant> listEtudiants = etudiantService.retrieveAllEtudiants();
-        return listEtudiants;
+        return etudiantService.retrieveAllEtudiants();
     }
-
-
-
-
-
-
-
 
 
 
@@ -35,25 +27,22 @@ public class EtudiantRestController {
 
     @GetMapping("/retrieve-etudiant-cin/{cin}")
     public Etudiant retrieveEtudiantParCin(@PathVariable("cin") Long cin) {
-        Etudiant etudiant = etudiantService.recupererEtudiantParCin(cin);
-        return etudiant;
+        return etudiantService.recupererEtudiantParCin(cin);
     }
 
 
     @GetMapping("/retrieve-etudiant/{etudiant-id}")
     public Etudiant retrieveEtudiant(@PathVariable("etudiant-id") Long chId) {
-        Etudiant etudiant = etudiantService.retrieveEtudiant(chId);
-        return etudiant;
+        return etudiantService.retrieveEtudiant(chId);
     }
 
     // http://localhost:8089/tpfoyer/etudiant/add-etudiant
     @PostMapping("/add-etudiant")
     public Etudiant addEtudiant(@RequestBody Etudiant c) {
-        Etudiant etudiant = etudiantService.addEtudiant(c);
-        return etudiant;
+        return etudiantService.addEtudiant(c);
     }
 
-    // http://localhost:8089/tpfoyer/etudiant/remove-etudiant/{etudiant-id}
+    // http://localhost:8089/tpfoyer/etudiant/remove-etudiant/etudiant-id
     @DeleteMapping("/remove-etudiant/{etudiant-id}")
     public void removeEtudiant(@PathVariable("etudiant-id") Long chId) {
         etudiantService.removeEtudiant(chId);
@@ -62,8 +51,7 @@ public class EtudiantRestController {
     // http://localhost:8089/tpfoyer/etudiant/modify-etudiant
     @PutMapping("/modify-etudiant")
     public Etudiant modifyEtudiant(@RequestBody Etudiant c) {
-        Etudiant etudiant = etudiantService.modifyEtudiant(c);
-        return etudiant;
+        return etudiantService.modifyEtudiant(c);
     }
 
 

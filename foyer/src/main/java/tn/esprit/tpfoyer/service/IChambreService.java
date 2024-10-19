@@ -4,6 +4,7 @@ import tn.esprit.tpfoyer.entity.Chambre;
 import tn.esprit.tpfoyer.entity.TypeChambre;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IChambreService {
 
@@ -14,8 +15,10 @@ public interface IChambreService {
     public Chambre modifyChambre(Chambre chambre);
 
     // Here we will add later methods calling keywords and methods calling JPQL
-    public Chambre trouverchambreSelonEtudiant(long Cin);
+    public Chambre trouverchambreSelonEtudiant(long cin);
 
     public List<Chambre> recupererChambresSelonTyp(TypeChambre tc);
+
+    Map<String, Integer> chambreStatistics();
 
 }

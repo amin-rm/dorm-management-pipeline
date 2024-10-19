@@ -19,7 +19,7 @@ public class UniversiteServiceImpl implements IUniversiteService {
     }
 
     public Universite retrieveUniversite(Long universiteId) {
-        return universiteRepository.findById(universiteId).get();
+        return universiteRepository.findById(universiteId).orElse(null);
     }
 
     public Universite addUniversite(Universite u) {
