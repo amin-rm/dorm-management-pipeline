@@ -6,7 +6,7 @@ pipeline {
         SONARQUBE_CREDS = credentials('sonarqube-credentials')  // SonarQube username & password
         DOCKER_CREDS = credentials('docker-credentials')  // DockerHub credentials
         // vars
-        GIT_BRANCH = 'master'
+        GIT_BRANCH = 'chambre-management'
         SLACK_CHANNEL = '#cicd-pipeline'
     }
 
@@ -40,8 +40,17 @@ pipeline {
             steps {
                 echo 'Running SonarQube Analysis...'
                 dir('foyer') {
-                    sh "mvn sonar:sonar -Dsonar.login=${env.SONARQUBE_CREDS_USR} -Dsonar.password=${env.SONARQUBE_CREDS_PSW}"
+                    // sh "mvn sonar:sonar -Dsonar.login=${env.SONARQUBE_CREDS_USR} -Dsonar.password=${env.SONARQUBE_CREDS_PSW}"
+                    withSonarQubeEnv('SonarQube') {
+                        sh "mvn sonar:sonar"
+                    }
                 }
+            }
+        }
+
+        stage("Quality gate") {
+            steps {
+                waitForQualityGate abortPipeline: true
             }
         }
 
@@ -63,6 +72,8 @@ pipeline {
             }
         }
 
+
+
         stage('Push Docker Image to DockerHub') {
             steps {
                 echo 'Tagging and pushing Docker image to DockerHub...'
@@ -77,27 +88,27 @@ pipeline {
                 }
             }
         }
+    }
 
-        stage('Notify Slack team') {
-            steps {
-                script {
-                    echo 'Creating JaCoCo report zip...'
-                    dir('foyer/target/site/jacoco') {
-                        // Create a zip file of the JaCoCo report
-                        sh 'zip -r jacoco-report.zip *'
-                    }
+    post {
+        always {
+            echo 'Creating JaCoCo report zip...'
+            dir('foyer/target/site/jacoco') {
+                // Create a zip file of the JaCoCo report
+                sh 'zip -r jacoco-report.zip *'
+            }
 
-                    // Define the build status and path to the zip file
-                    def buildStatus = currentBuild.currentResult ?: 'SUCCESS'
+            script {
+                // Define the build status and path to the zip file
+                def buildStatus = currentBuild.currentResult ?: 'SUCCESS'
 
-                    // send zip file to Slack
-                    dir('foyer/target/site/jacoco') {
-                        slackUploadFile(
+                // send zip file to Slack
+                dir('foyer/target/site/jacoco') {
+                    slackUploadFile(
                             channel: env.SLACK_CHANNEL,
                             filePath: "jacoco-report.zip",
                             initialComment: "Build Status: ${buildStatus}. Please find the JaCoCo code report attached."
-                        )
-                    }
+                    )
                 }
             }
         }
