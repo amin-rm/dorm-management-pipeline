@@ -10,7 +10,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import tn.esprit.tpfoyer.entity.Etudiant;
 import tn.esprit.tpfoyer.repository.EtudiantRepository;
-import tn.esprit.tpfoyer.service.ChambreServiceImpl;
 import tn.esprit.tpfoyer.service.EtudiantServiceImpl;
 
 import java.util.Collections;
