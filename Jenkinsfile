@@ -6,7 +6,7 @@ pipeline {
         SONARQUBE_CREDS = credentials('sonarqube-credentials')  // SonarQube username & password
         DOCKER_CREDS = credentials('docker-credentials')  // DockerHub credentials
         // vars
-        GIT_BRANCH = 'master'
+        GIT_BRANCH = 'chambre-management'
         SLACK_CHANNEL = '#cicd-pipeline'
     }
 
