@@ -79,35 +79,20 @@ pipeline {
             steps {
                 echo 'Tagging and pushing Docker image to DockerHub...'
                 script {
-                    sh """
+                    sh '''
                 DOCKER_USER=${DOCKER_CREDS_USR}
                 DOCKER_PASS=${DOCKER_CREDS_PSW}
-                docker tag foyer-app:${env.APP_VERSION} ${DOCKER_USER}/dorm-management:${env.APP_VERSION}
-                echo ${DOCKER_CREDS_PSW} | docker login -u ${DOCKER_CREDS_USR} --password-stdin
-                docker push ${DOCKER_USER}/dorm-management:${env.APP_VERSION}
-            """
+                docker tag foyer-app:${APP_VERSION} ${DOCKER_USER}/dorm-management:${APP_VERSION}
+                echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+                docker push ${DOCKER_USER}/dorm-management:${APP_VERSION}
+            '''
                 }
             }
         }
 
 
-        stage('Update helm chart') {
-            steps {
-                echo 'Updating helm chart...'
-                dir('helm-charts/dorm-backend-app') {
-                    // Update the image version in values.yaml
-                    sh "sed -i 's/tag: .*/tag: ${env.APP_VERSION}/' values.yaml"
 
-                    sh """
-                        git config user.email ${GIT_EMAIL}
-                        git config user.name ${GIT_CREDENTIALS_USR}
-                        git add values.yaml
-                        git commit -m "Update Helm chart tag to ${env.APP_VERSION}"
-                        git push https://${GIT_CREDENTIALS_USR}:${GIT_CREDENTIALS_PSW}@github.com/amin-rm/dorm-management-pipeline.git HEAD:${env.GIT_BRANCH}
-                    """
-                }
-            }
-        }
+
 
     }
 
