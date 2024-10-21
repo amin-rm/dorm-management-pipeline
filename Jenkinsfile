@@ -7,7 +7,7 @@ pipeline {
         DOCKER_CREDS = credentials('docker-credentials')  // DockerHub credentials
         GIT_CREDENTIALS = credentials('github-creds')  // GitHub credentials
         // vars
-        APP_VERSION = '1.0.0' // define your application version
+        APP_VERSION = '2.0.0' // define your application version
         GIT_EMAIL = "ramdhaniahmedamine@gmail.com"
         GIT_BRANCH = 'chambre-management'
         SLACK_CHANNEL = '#cicd-pipeline'
@@ -59,7 +59,8 @@ pipeline {
         stage('Trivy Filesystem Scan') {
             steps {
                 echo 'Running Trivy filesystem scan...'
-                sh "trivy fs ."
+                // Save the Trivy filesystem scan report to a file
+                sh "trivy fs . --format table --output trivy-fs-report.txt"
             }
         }
 
@@ -95,7 +96,8 @@ pipeline {
         stage('Trivy Image Scan') {
             steps {
                 echo 'Running Trivy image scan...'
-                sh "trivy image foyer-app:${env.APP_VERSION}"
+                // Save the Trivy scan report to a file
+                sh "trivy image foyer-app:${env.APP_VERSION} --format table --output trivy-image-report.txt"
             }
         }
 
@@ -142,25 +144,37 @@ pipeline {
 
     post {
         always {
-            echo 'Creating JaCoCo report zip...'
+            echo 'Creating combined report zip...'
+
+            // Create a directory to store all reports if needed
+            sh 'mkdir -p reports'
+
+            // Move JaCoCo report to the reports directory
             dir('foyer/target/site/jacoco') {
-                // Create a zip file of the JaCoCo report
-                sh 'zip -r jacoco-report.zip *'
+                echo 'Copying JaCoCo report...'
+                sh 'cp -r * ../../../../reports/'
             }
+
+            // Copy Trivy reports into the reports directory
+            echo 'Copying Trivy reports...'
+            sh 'cp trivy-image-report.txt reports/'
+            sh 'cp trivy-fs-report.txt reports/'
+
+            // Zip all the reports together
+            sh 'zip -r reports.zip reports/*'
 
             script {
                 // Define the build status and path to the zip file
                 def buildStatus = currentBuild.currentResult ?: 'SUCCESS'
 
-                // send zip file to Slack
-                dir('foyer/target/site/jacoco') {
-                    slackUploadFile(
-                            channel: env.SLACK_CHANNEL,
-                            filePath: "jacoco-report.zip",
-                            initialComment: "Build Status: ${buildStatus}. Please find the JaCoCo code report attached."
-                    )
-                }
+                // Send the zip file to Slack
+                slackUploadFile(
+                        channel: env.SLACK_CHANNEL,
+                        filePath: "reports.zip",
+                        initialComment: "Build Status: ${buildStatus}. Please find the JaCoCo and Trivy reports in the attached zip file."
+                )
             }
         }
     }
+
 }
