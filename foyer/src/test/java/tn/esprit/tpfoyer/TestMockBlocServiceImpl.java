@@ -10,8 +10,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import tn.esprit.tpfoyer.entity.Bloc;
-import tn.esprit.tpfoyer.entity.Chambre;
-import tn.esprit.tpfoyer.entity.TypeChambre;
 import tn.esprit.tpfoyer.repository.BlocRepository;
 
 import tn.esprit.tpfoyer.service.BlocServiceImpl;
@@ -25,7 +23,7 @@ import static org.mockito.Mockito.when;
 @SpringBootTest
 @ActiveProfiles("test") // To use the test profile "application-test.properties"
 @ExtendWith(MockitoExtension.class)
-public class TestMockBlocServiceImpl  {
+class TestMockBlocServiceImpl  {
 
     @Mock
     private BlocRepository mockBlocRepository;
