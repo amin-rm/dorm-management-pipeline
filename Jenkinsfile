@@ -83,7 +83,7 @@ pipeline {
                 DOCKER_USER=${DOCKER_CREDS_USR}
                 DOCKER_PASS=${DOCKER_CREDS_PSW}
                 docker tag foyer-app:${env.APP_VERSION} ${DOCKER_USER}/dorm-management:${env.APP_VERSION}
-                echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+                echo ${DOCKER_CREDS_PSW} | docker login -u ${DOCKER_CREDS_USR} --password-stdin
                 docker push ${DOCKER_USER}/dorm-management:${env.APP_VERSION}
             """
                 }
