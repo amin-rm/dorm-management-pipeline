@@ -14,23 +14,22 @@ pipeline {
     }
 
     stages {
-        stage('Clone Repository') {
+
+        stage('Clean Workspace') {
+            steps {
+                echo 'Cleaning workspace...'
+                cleanWs()
+            }
+        }
+
+        stage('Git Checkout') {
             steps {
                 echo 'Pulling changes...'
                 git url: 'https://github.com/amin-rm/dorm-management-pipeline', branch: env.GIT_BRANCH
             }
         }
 
-        stage('Maven Build') {
-            steps {
-                echo 'Building project...'
-                dir('foyer') {
-                    sh "mvn clean install -DskipTests"
-                }
-            }
-        }
-
-        stage('Unit tests') {
+        stage('Unit tests with Junit') {
             steps {
                 echo 'Performing unit tests...'
                 dir('foyer') {
@@ -57,7 +56,25 @@ pipeline {
             }
         }
 
-        stage('Deploy to nexus') {
+        stage('Trivy Filesystem Scan') {
+            steps {
+                echo 'Running Trivy filesystem scan...'
+                sh "trivy fs ."
+            }
+        }
+
+
+        stage('Build with Maven') {
+            steps {
+                echo 'Building project...'
+                dir('foyer') {
+                    sh "mvn clean install -DskipTests"
+                }
+            }
+        }
+
+
+        stage('Publish to nexus') {
             steps {
                 echo 'Deploying to nexus...'
                 dir('foyer') {
@@ -66,7 +83,7 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
+        stage('Build and Tag Docker Image') {
             steps {
                 echo 'Building Docker image...'
                 sh "docker build -t foyer-app:${env.APP_VERSION} ."
@@ -75,7 +92,16 @@ pipeline {
 
 
 
-        stage('Push Docker Image to DockerHub') {
+        stage('Trivy Image Scan') {
+            steps {
+                echo 'Running Trivy image scan...'
+                sh "trivy image foyer-app:${env.APP_VERSION}"
+            }
+        }
+
+
+
+        stage('Push Docker Image') {
             steps {
                 echo 'Tagging and pushing Docker image to DockerHub...'
                 script {
