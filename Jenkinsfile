@@ -90,6 +90,24 @@ pipeline {
             }
         }
 
+        stage('Update helm chart') {
+            steps {
+                echo 'Updating helm chart...'
+                dir('helm-charts/dorm-backend-app') {
+                    // Update the image version in values.yaml
+                    sh "sed -i 's/tag: .*/tag: ${env.APP_VERSION}/' values.yaml"
+
+                    sh """
+                        git config user.email ${GIT_EMAIL}
+                        git config user.name ${GIT_CREDENTIALS_USR}
+                        git add values.yaml
+                        git commit -m "Update Helm chart tag to ${env.APP_VERSION}"
+                        git push https://${GIT_CREDENTIALS_USR}:${GIT_CREDENTIALS_PSW}@github.com/amin-rm/dorm-management-pipeline.git HEAD:${env.GIT_BRANCH}
+                    """
+                }
+            }
+        }
+
 
 
 
