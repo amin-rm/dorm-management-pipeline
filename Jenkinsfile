@@ -45,6 +45,12 @@ pipeline {
             }
         }
 
+        stage("Quality gate") {
+            steps {
+                waitForQualityGate abortPipeline: true
+            }
+        }
+
         stage('Deploy to nexus') {
             steps {
                echo 'Deploying to nexus...'
@@ -63,6 +69,8 @@ pipeline {
             }
         }
 
+
+
         stage('Push Docker Image to DockerHub') {
             steps {
                 echo 'Tagging and pushing Docker image to DockerHub...'
@@ -77,28 +85,26 @@ pipeline {
                 }
             }
         }
+    }
 
-        stage('Notify Slack team') {
-            steps {
-                script {
-                    echo 'Creating JaCoCo report zip...'
-                    dir('foyer/target/site/jacoco') {
-                        // Create a zip file of the JaCoCo report
-                        sh 'zip -r jacoco-report.zip *'
-                    }
+    post {
+        always {
+            echo 'Creating JaCoCo report zip...'
+            dir('foyer/target/site/jacoco') {
+                // Create a zip file of the JaCoCo report
+                sh 'zip -r jacoco-report.zip *'
+            }
 
-                    // Define the build status and path to the zip file
-                    def buildStatus = currentBuild.currentResult ?: 'SUCCESS'
+            // Define the build status and path to the zip file
+            def buildStatus = currentBuild.currentResult ?: 'SUCCESS'
 
-                    // send zip file to Slack
-                    dir('foyer/target/site/jacoco') {
-                        slackUploadFile(
-                            channel: env.SLACK_CHANNEL,
-                            filePath: "jacoco-report.zip",
-                            initialComment: "Build Status: ${buildStatus}. Please find the JaCoCo code report attached."
-                        )
-                    }
-                }
+            // send zip file to Slack
+            dir('foyer/target/site/jacoco') {
+                slackUploadFile(
+                        channel: env.SLACK_CHANNEL,
+                        filePath: "jacoco-report.zip",
+                        initialComment: "Build Status: ${buildStatus}. Please find the JaCoCo code report attached."
+                )
             }
         }
     }
