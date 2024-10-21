@@ -5,7 +5,7 @@ pipeline {
         // Jenkins credentials
         SONARQUBE_CREDS = credentials('sonarqube-credentials')  // SonarQube username & password
         DOCKER_CREDS = credentials('docker-credentials')  // DockerHub credentials
-        DOCKER_CREDS = credentials('github-creds')  // GitHub credentials
+        GIT_CREDENTIALS = credentials('github-creds')  // GitHub credentials
         // vars
         APP_VERSION = '1.0.0' // define your application version
         GIT_EMAIL = "ramdhaniahmedamine@gmail.com"
