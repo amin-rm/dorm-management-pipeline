@@ -79,13 +79,13 @@ pipeline {
             steps {
                 echo 'Tagging and pushing Docker image to DockerHub...'
                 script {
-                    sh '''
-                        DOCKER_USER=${DOCKER_CREDS_USR}
-                        DOCKER_PASS=${DOCKER_CREDS_PSW}
-                        docker tag foyer-app:${env.APP_VERSION} ${DOCKER_USER}/dorm-management:${env.APP_VERSION}
-                        echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-                        docker push ${DOCKER_USER}/dorm-management:${env.APP_VERSION}
-                    '''
+                    sh """
+                DOCKER_USER=${DOCKER_CREDS_USR}
+                DOCKER_PASS=${DOCKER_CREDS_PSW}
+                docker tag foyer-app:${env.APP_VERSION} ${DOCKER_USER}/dorm-management:${env.APP_VERSION}
+                echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+                docker push ${DOCKER_USER}/dorm-management:${env.APP_VERSION}
+            """
                 }
             }
         }
