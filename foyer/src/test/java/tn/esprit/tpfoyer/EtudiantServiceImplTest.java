@@ -147,4 +147,25 @@ class EtudiantServiceImplTest {
 
         verify(mockEtudiantRepository, times(1)).deleteById(etudiantId);
     }
+
+    @Test
+    void testRecupererEtudiantParCin() {
+        // Given
+        long cin = 123456789; // Sample CIN
+        Etudiant expectedEtudiant = new Etudiant(); // Create a mock Etudiant object
+        expectedEtudiant.setCinEtudiant(cin); // Set the CIN for the expected object
+        expectedEtudiant.setNomEtudiant("John Doe"); // Set other properties as needed
+
+        // When
+        when(mockEtudiantRepository.findEtudiantByCinEtudiant(cin)).thenReturn(expectedEtudiant); // Mock repository behavior
+
+        // Act
+        Etudiant result = etudiantService.recupererEtudiantParCin(cin); // Call the method under test
+
+        // Assert
+        Assertions.assertNotNull(result); // Ensure the result is not null
+        Assertions.assertEquals(expectedEtudiant.getCinEtudiant(), result.getCinEtudiant()); // Verify the CIN matches
+        Assertions.assertEquals(expectedEtudiant.getNomEtudiant(), result.getNomEtudiant()); // Verify the name matches
+    }
+
 }
