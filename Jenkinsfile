@@ -5,8 +5,10 @@ pipeline {
         // Jenkins credentials
         SONARQUBE_CREDS = credentials('sonarqube-credentials')  // SonarQube username & password
         DOCKER_CREDS = credentials('docker-credentials')  // DockerHub credentials
+        DOCKER_CREDS = credentials('github-creds')  // GitHub credentials
         // vars
         APP_VERSION = '1.0.0' // define your application version
+        GIT_EMAIL = "ramdhaniahmedamine@gmail.com"
         GIT_BRANCH = 'chambre-management'
         SLACK_CHANNEL = '#cicd-pipeline'
     }
@@ -87,6 +89,28 @@ pipeline {
                 }
             }
         }
+
+
+        stages {
+            stage('Update helm chart') {
+                steps {
+                    echo 'Updating helm chart...'
+                    dir('helm-charts/dorm-backend-app') {
+                        // Update the image version in values.yaml
+                        sh "sed -i 's/tag: .*/tag: ${env.APP_VERSION}/' values.yaml"
+
+                        sh """
+                        git config user.email ${GIT_EMAIL}
+                        git config user.name ${GIT_CREDENTIALS_USR}
+                        git add values.yaml
+                        git commit -m "Update Helm chart tag to ${env.APP_VERSION}"
+                        git push https://${GIT_CREDENTIALS_USR}:${GIT_CREDENTIALS_PSW}@github.com/amin-rm/dorm-management-pipeline.git HEAD:${env.GIT_BRANCH}
+                    """
+                    }
+                }
+            }
+        }
+
     }
 
     post {
