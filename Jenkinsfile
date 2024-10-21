@@ -6,6 +6,7 @@ pipeline {
         SONARQUBE_CREDS = credentials('sonarqube-credentials')  // SonarQube username & password
         DOCKER_CREDS = credentials('docker-credentials')  // DockerHub credentials
         // vars
+        APP_VERSION = '1.0.0' // define your application version
         GIT_BRANCH = 'chambre-management'
         SLACK_CHANNEL = '#cicd-pipeline'
     }
@@ -56,17 +57,17 @@ pipeline {
 
         stage('Deploy to nexus') {
             steps {
-               echo 'Deploying to nexus...'
-               dir('foyer') {
-                sh 'mvn deploy -DskipTests'
-               }
+                echo 'Deploying to nexus...'
+                dir('foyer') {
+                    sh "mvn deploy -DskipTests -Drevision=${env.APP_VERSION}"
+                }
             }
         }
 
         stage('Build Docker Image') {
             steps {
                 echo 'Building Docker image...'
-                sh 'docker build -t foyer-app:latest .'
+                sh "docker build -t foyer-app:${env.APP_VERSION} ."
             }
         }
 
@@ -79,9 +80,9 @@ pipeline {
                     sh '''
                         DOCKER_USER=${DOCKER_CREDS_USR}
                         DOCKER_PASS=${DOCKER_CREDS_PSW}
-                        docker tag foyer-app:latest ${DOCKER_USER}/dorm-management:latest
+                        docker tag foyer-app:${env.APP_VERSION} ${DOCKER_USER}/dorm-management:${env.APP_VERSION}
                         echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-                        docker push ${DOCKER_USER}/dorm-management:latest
+                        docker push ${DOCKER_USER}/dorm-management:${env.APP_VERSION}
                     '''
                 }
             }
