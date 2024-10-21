@@ -21,8 +21,11 @@ public class EtudiantServiceImpl implements IEtudiantService {
     public Etudiant retrieveEtudiant(Long etudiantId) {
         return etudiantRepository.findById(etudiantId).orElse(null);
     }
-    public Etudiant addEtudiant(Etudiant c) {
-        return etudiantRepository.save(c);
+    public Etudiant addEtudiant(Etudiant etudiant) {
+        if (etudiantRepository.existsById(etudiant.getIdEtudiant())) {
+            return null; // Return null if the student already exists
+        }
+        return etudiantRepository.save(etudiant); // Save and return the new Etudiant
     }
     public Etudiant modifyEtudiant(Etudiant c) {
         return etudiantRepository.save(c);
