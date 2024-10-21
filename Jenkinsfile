@@ -66,9 +66,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 echo 'Building Docker image...'
-                dir('foyer') {
-                    sh 'docker build -t foyer-app:latest .'
-                }
+                sh 'docker build -t foyer-app:latest .'
             }
         }
 
