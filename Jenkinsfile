@@ -7,7 +7,7 @@ pipeline {
         DOCKER_CREDS = credentials('docker-credentials')  // DockerHub credentials
         GIT_CREDENTIALS = credentials('github-creds')  // GitHub credentials
         // vars
-        APP_VERSION = '2.0.0' // define your application version
+        APP_VERSION = '3.0.0' // define application version
         GIT_EMAIL = "ramdhaniahmedamine@gmail.com"
         GIT_BRANCH = 'chambre-management'
         SLACK_CHANNEL = '#cicd-pipeline'
