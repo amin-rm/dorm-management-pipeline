@@ -149,16 +149,37 @@ pipeline {
             // Create a directory to store all reports if needed
             sh 'mkdir -p reports'
 
-            // Move JaCoCo report to the reports directory
-            dir('foyer/target/site/jacoco') {
-                echo 'Copying JaCoCo report...'
-                sh 'cp -r * ../../../../reports/'
+            // Check if the JaCoCo report directory exists before copying
+            script {
+                if (fileExists('foyer/target/site/jacoco')) {
+                    echo 'Copying JaCoCo report...'
+                    dir('foyer/target/site/jacoco') {
+                        sh 'cp -r * ../../../../reports/'
+                    }
+                } else {
+                    echo 'JaCoCo report directory does not exist, skipping copy...'
+                }
             }
 
-            // Copy Trivy reports into the reports directory
-            echo 'Copying Trivy reports...'
-            sh 'cp trivy-image-report.txt reports/'
-            sh 'cp trivy-fs-report.txt reports/'
+            // Check if the Trivy image report exists
+            script {
+                if (fileExists('trivy-image-report.txt')) {
+                    echo 'Copying Trivy image scan report...'
+                    sh 'cp trivy-image-report.txt reports/'
+                } else {
+                    echo 'Trivy image scan report not found, skipping...'
+                }
+            }
+
+            // Check if the Trivy filesystem report exists
+            script {
+                if (fileExists('trivy-fs-report.txt')) {
+                    echo 'Copying Trivy filesystem scan report...'
+                    sh 'cp trivy-fs-report.txt reports/'
+                } else {
+                    echo 'Trivy filesystem scan report not found, skipping...'
+                }
+            }
 
             // Zip all the reports together
             sh 'zip -r reports.zip reports/*'
@@ -176,5 +197,6 @@ pipeline {
             }
         }
     }
+
 
 }
