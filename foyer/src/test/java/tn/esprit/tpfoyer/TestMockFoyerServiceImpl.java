@@ -16,6 +16,7 @@ import tn.esprit.tpfoyer.service.FoyerServiceImpl;
 
 import java.util.List;
 
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 @ActiveProfiles("test")
 @SpringBootTest
@@ -50,6 +51,48 @@ import static org.mockito.Mockito.when;
         List<Foyer> expected = foyerService.retrieveAllFoyers();
         Assertions.assertEquals(expected, foyerList);
     }
+    @Test
+    void testRetrieveFoyer() {
+        Long foyerId = 11L;
+        when(foyerRepository.findById(foyerId)).thenReturn(java.util.Optional.of(foyer1));
+
+        Foyer result = foyerService.retrieveFoyer(foyerId);
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(foyer1, result);
+
+        // Cas où le foyer n'existe pas
+        when(foyerRepository.findById(99L)).thenReturn(java.util.Optional.empty());
+        Assertions.assertNull(foyerService.retrieveFoyer(99L));
+    }
+    @Test
+    void testAddFoyer() {
+        when(foyerRepository.save(foyer1)).thenReturn(foyer1);
+
+        Foyer result = foyerService.addFoyer(foyer1);
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(foyer1, result);
+    }
+    @Test
+    void testModifyFoyer() {
+        Foyer modifiedFoyer = Foyer.builder()
+                .idFoyer(11L)
+                .capaciteFoyer(120)  // Capacité modifiée
+                .nomFoyer("espoir_modifie")
+                .build();
+
+        when(foyerRepository.save(modifiedFoyer)).thenReturn(modifiedFoyer);
+
+        Foyer result = foyerService.modifyFoyer(modifiedFoyer);
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(modifiedFoyer, result);
+    }
+    @Test
+    void testRemoveFoyer() {
+        Long foyerId = 11L;
+        foyerService.removeFoyer(foyerId);
+        verify(foyerRepository).deleteById(foyerId);
+    }
+
 
 
 }
