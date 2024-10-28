@@ -2,7 +2,7 @@ replicaCount: 2  # For the dorm backend application
 
 image:
   repository: amineromdhani/dorm-management # this is an example public image
-  tag: latest
+  tag: 3.1.0
   pullPolicy: IfNotPresent
 
 service:
@@ -38,3 +38,9 @@ mysql:
     persistence:
       enabled: true
       existingClaim: mysql-pvc
+  metrics:
+    enabled: true
+    service:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9104"

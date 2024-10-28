@@ -10,8 +10,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import tn.esprit.tpfoyer.entity.Bloc;
-import tn.esprit.tpfoyer.entity.Chambre;
-import tn.esprit.tpfoyer.entity.TypeChambre;
 import tn.esprit.tpfoyer.repository.BlocRepository;
 
 import tn.esprit.tpfoyer.service.BlocServiceImpl;
@@ -25,13 +23,13 @@ import static org.mockito.Mockito.when;
 @SpringBootTest
 @ActiveProfiles("test") // To use the test profile "application-test.properties"
 @ExtendWith(MockitoExtension.class)
-public class TestMockBlocServiceImpl  {
+class TestMockBlocServiceImpl  {
 
     @Mock
     private BlocRepository mockBlocRepository;
 
     @InjectMocks
-    private BlocServiceImpl BlocService;
+    private BlocServiceImpl blocService;
 
     private final Bloc bloc1 = Bloc.builder().idBloc(1)
             .nomBloc("A")
@@ -47,11 +45,6 @@ public class TestMockBlocServiceImpl  {
             .capaciteBloc(90).build()
             ;
 
-    private final Bloc bloc4 = Bloc.builder().idBloc(4)
-            .nomBloc("D")
-            .capaciteBloc(150).build()
-            ;
-
     private  List<Bloc> listBloc = List.of(bloc1,bloc2,bloc3);
 
 
@@ -59,7 +52,7 @@ public class TestMockBlocServiceImpl  {
     void testretrieveAllBloc() {
 
         when(mockBlocRepository.findAll()).thenReturn(listBloc);
-        List<Bloc> expectedBloc = BlocService.retrieveAllBlocs();
+        List<Bloc> expectedBloc = blocService.retrieveAllBlocs();
         Assertions.assertEquals(listBloc, expectedBloc);
     }
 
@@ -67,7 +60,7 @@ public class TestMockBlocServiceImpl  {
     void testretrieveBloc() {
 
         when(mockBlocRepository.findById(2L)).thenReturn(Optional.of(bloc2));
-        Optional<Bloc> expectedBloc = Optional.of(BlocService.retrieveBloc(2L));
+        Optional<Bloc> expectedBloc = Optional.of(blocService.retrieveBloc(2L));
         Assertions.assertEquals(expectedBloc.get(),bloc2);
     }
 

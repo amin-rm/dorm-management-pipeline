@@ -11,6 +11,7 @@ This repository contains a CI/CD for a dorm management application built with **
 - **Containerization with Docker**: Creates Docker images of Spring Boot services and pushes them to **Nexus** for artifact management.
 - **Real-time Notifications via Slack**: Sends notifications for build statuses and detailed code coverage reports (JaCoCo).
 - **Optimized Resource Management**: Uses Helm charts for scalable Kubernetes deployments with efficient resource allocation.
+- **Vulnerability Scanning with Trivy**: Integrates Trivy for comprehensive filesystem and Docker image vulnerability scanning, ensuring robust security compliance throughout the development lifecycle.
 
 ## Jenkinsfile Overview
 
@@ -26,6 +27,7 @@ To use the Jenkinsfile, ensure that the following tools are installed on your sy
 - **Sonatype Nexus Repository**
 - **Slack Plugin (for Jenkins)**
 - **Docker**
+- **Trivy**
 
 For a simpler setup of SonarQube and Nexus, you can use their Docker images and run them as containers:
 
