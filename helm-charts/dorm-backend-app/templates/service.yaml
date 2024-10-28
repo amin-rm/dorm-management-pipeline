@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: {{ include "backend-app.fullname" . }}-svc
   labels:
-    app: {{ include "backend-app.name" . }}
+    app: backend-{{ include "backend-app.name" . }}
 spec:
   type: {{ .Values.service.type }}
   ports:
@@ -11,5 +11,5 @@ spec:
       targetPort: 8080
       nodePort: {{ .Values.service.nodePort }}
   selector:
-    app: {{ include "backend-app.name" . }}
+    app: backend-{{ include "backend-app.name" . }}
 
