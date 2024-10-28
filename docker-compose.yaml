@@ -6,7 +6,7 @@ services:
     container_name: backend-mysql
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword  # root password for MySQL
-      MYSQL_DATABASE: mydb               # default database
+      MYSQL_DATABASE: db               # default database
       MYSQL_USER: user                   # user
       MYSQL_PASSWORD: pass               # Pass
     ports:
