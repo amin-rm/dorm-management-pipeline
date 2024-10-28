@@ -15,7 +15,7 @@ services:
       - mysql-data:/var/lib/mysql        # for data persistence
 
   backend:
-    image: jaleldridi5/dorm-management   # your backend Docker image
+    image: jaleldridi5/dorm-management:3.0.0   # your backend Docker image
     container_name: backend-app
     environment:
       SPRING_PROFILES_ACTIVE: k8s
