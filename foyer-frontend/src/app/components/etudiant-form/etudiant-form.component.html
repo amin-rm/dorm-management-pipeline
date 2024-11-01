@@ -1,0 +1,54 @@
+<div class="container mt-4">
+  <h2>{{ isEditMode ? "Modifier" : "Ajouter" }} un étudiant</h2>
+
+  <form [formGroup]="etudiantForm" (ngSubmit)="onSubmit()" class="col-md-6">
+    <div class="mb-3">
+      <label for="cin" class="form-label">CIN</label>
+      <input
+        type="number"
+        class="form-control"
+        id="cin"
+        formControlName="cinEtudiant"
+      />
+    </div>
+
+    <div class="mb-3">
+      <label for="nom" class="form-label">Nom</label>
+      <input
+        type="text"
+        class="form-control"
+        id="nom"
+        formControlName="nomEtudiant"
+      />
+    </div>
+
+    <div class="mb-3">
+      <label for="prenom" class="form-label">Prénom</label>
+      <input
+        type="text"
+        class="form-control"
+        id="prenom"
+        formControlName="prenomEtudiant"
+      />
+    </div>
+
+    <div class="mb-3">
+      <label for="dateNaissance" class="form-label">Date de Naissance</label>
+      <input
+        type="date"
+        class="form-control"
+        id="dateNaissance"
+        formControlName="dateNaissance"
+      />
+    </div>
+
+    <button
+      type="submit"
+      class="btn btn-primary"
+      [disabled]="!etudiantForm.valid"
+    >
+      {{ isEditMode ? "Modifier" : "Ajouter" }}
+    </button>
+    <a routerLink="/etudiants" class="btn btn-secondary ms-2">Annuler</a>
+  </form>
+</div>

@@ -1,0 +1,39 @@
+<div class="container mt-4">
+  <h2>Liste des Étudiants</h2>
+  <a routerLink="/etudiant/new" class="btn btn-primary mb-3"
+    >Ajouter un étudiant</a
+  >
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>CIN</th>
+        <th>Nom</th>
+        <th>Prénom</th>
+        <th>Date de Naissance</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let etudiant of etudiants">
+        <td>{{ etudiant.cinEtudiant }}</td>
+        <td>{{ etudiant.nomEtudiant }}</td>
+        <td>{{ etudiant.prenomEtudiant }}</td>
+        <td>{{ etudiant.dateNaissance | date : "dd/MM/yyyy" }}</td>
+        <td>
+          <a
+            [routerLink]="['/etudiant/edit', etudiant.idEtudiant]"
+            class="btn btn-info btn-sm me-2"
+            >Modifier</a
+          >
+          <button
+            (click)="deleteEtudiant(etudiant.idEtudiant!)"
+            class="btn btn-danger btn-sm"
+          >
+            Supprimer
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
