@@ -7,8 +7,8 @@ import { Etudiant } from '../models/etudiant';
   providedIn: 'root'
 })
 export class EtudiantService {
-  private baseUrl = 'http://localhost:8089/tpfoyer/etudiant';
-
+  //private baseUrl = 'http://localhost:8089/tpfoyer/etudiant';
+  private baseUrl = 'http://192.168.119.128:8089/tpfoyer/etudiant';
   constructor(private http: HttpClient) { }
 
   getAll(): Observable<Etudiant[]> {
