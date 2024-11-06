@@ -29,5 +29,14 @@ services:
     depends_on:
       - mysqldb
 
+  tp-foyer-front:
+    image: tp-foyer-front:latest
+    container_name: tp-foyer-front
+    restart: on-failure
+    ports:
+      - "3000:3000" # Change the port to the one your frontend app runs on
+    depends_on:
+      - app
+
 volumes:
   db_data:
