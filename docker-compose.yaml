@@ -30,7 +30,7 @@ services:
       - mysqldb
 
   tp-foyer-front:
-    image: tp-foyer-front:latest
+    image: ahmedhachicha201/tp-foyer-front:latest
     container_name: tp-foyer-front
     restart: on-failure
     ports:
