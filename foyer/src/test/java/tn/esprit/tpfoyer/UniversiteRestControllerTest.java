@@ -1,4 +1,4 @@
-package tn.esprit.tpfoyer.UniversityTest;
+package tn.esprit.tpfoyer;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,15 +7,14 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import tn.esprit.tpfoyer.control.UniversiteRestController;
-import tn.esprit.tpfoyer.entity.Universite;
 import tn.esprit.tpfoyer.service.IUniversiteService;
 
 import java.util.Collections;
-import java.util.Optional;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(UniversiteRestController.class)
 public class UniversiteRestControllerTest {
