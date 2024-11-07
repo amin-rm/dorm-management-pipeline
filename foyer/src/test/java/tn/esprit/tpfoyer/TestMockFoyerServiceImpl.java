@@ -1,6 +1,5 @@
 package tn.esprit.tpfoyer;
 
-import org.h2.command.dml.MergeUsing;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
