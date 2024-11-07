@@ -4,6 +4,10 @@ metadata:
   name: {{ include "backend-app.fullname" . }}-svc
   labels:
     app: {{ include "backend-app.name" . }}
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/path: "/tpfoyer/actuator/prometheus"
+    prometheus.io/port: "8089"
 spec:
   type: {{ .Values.service.type }}
   ports:
@@ -12,4 +16,3 @@ spec:
       nodePort: {{ .Values.service.nodePort }}
   selector:
     app: {{ include "backend-app.name" . }}
-
