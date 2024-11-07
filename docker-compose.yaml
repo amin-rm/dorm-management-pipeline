@@ -34,7 +34,7 @@ services:
     container_name: tp-foyer-front
     restart: on-failure
     ports:
-      - "3000:3000" # Change the port to the one your frontend app runs on
+      - "80:3000" # Change the port to the one your frontend app runs on
     depends_on:
       - app
 
