@@ -2,7 +2,7 @@ replicaCount: 2  # For the dorm backend application
 
 image:
   repository: amineromdhani/dorm-management # this is an example public image
-  tag: 3.1.0
+  tag: 3.0.0
   pullPolicy: IfNotPresent
 
 service:
